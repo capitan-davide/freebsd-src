@@ -100,6 +100,16 @@ INTERPOSED = \
 
 PSEUDO+=	${INTERPOSED}
 
+# OsCraft: the system calls are not traps but kernel calls and messages,
+# in one prebuilt object (oscraft-runtimes/libsys, in Rust), which takes
+# the place of the generated stubs, cerror and vfork.
+.if defined(OSCRAFT_LIBSYS_OBJ)
+MDASM:=	${MDASM:Ncerror.S:Nvfork.S}
+OBJS+=	oscraft_libsys.o
+oscraft_libsys.o oscraft_libsys.pico oscraft_libsys.nossppico: ${OSCRAFT_LIBSYS_OBJ}
+	cp ${.ALLSRC} ${.TARGET}
+.endif
+
 # Add machine dependent asm sources:
 SRCS+=${MDASM}
 
@@ -117,7 +127,9 @@ SASM=	${ASM:S/.o/.S/}
 
 SPSEUDO= ${PSEUDO:C/^.*$/_&.S/}
 
+.if !defined(OSCRAFT_LIBSYS_OBJ)
 SRCS+=	${SASM} ${SPSEUDO}
+.endif
 
 SYM_MAPS+=	${LIBSYS_SRCTOP}/syscalls.map
 SYM_MAPS+=	${LIBSYS_SRCTOP}/Symbol.sys.map
