@@ -34,6 +34,10 @@
 #ifndef _MTREE_H_
 #define	_MTREE_H_
 
+/* OsCraft: before the st_mtimespec member, so that the Linux cross-build
+   header's st_mtimespec macro renames the member and its uses alike. */
+#include <sys/stat.h>
+
 #define	KEYDEFAULT	(F_GID | F_MODE | F_NLINK | F_SIZE | F_SLINK | \
 			F_TIME | F_TYPE | F_UID | F_FLAGS)
 
