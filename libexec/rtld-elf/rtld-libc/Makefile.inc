@@ -88,9 +88,10 @@ CLEANFILES+=${_obj}.nossppico
 .endfor
 _rtld_libsys_objs=
 .if defined(OSCRAFT_LIBSYS_OBJ)
-# OsCraft: the system calls are one object (lib/libsys/Makefile.sys).
-_rtld_libsys_objs+=oscraft_libsys.pico
-CLEANFILES+=oscraft_libsys.pico
+# OsCraft: the system calls are one object (lib/libsys/Makefile.sys),
+# which reads the auxiliary vector through auxv.c.
+_rtld_libsys_objs+=oscraft_libsys.pico auxv.pico
+CLEANFILES+=oscraft_libsys.pico auxv.pico
 .else
 .for _obj in ${_libsys_other_objects}
 _rtld_libsys_objs+=${_obj}.pico
