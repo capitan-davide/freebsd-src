@@ -87,11 +87,17 @@ CLEANFILES+=${_obj}.nossppico
 # LDFLAGS+=	-Wl,--trace-symbol=${_obj}
 .endfor
 _rtld_libsys_objs=
+.if defined(OSCRAFT_LIBSYS_OBJ)
+# OsCraft: the system calls are one object (lib/libsys/Makefile.sys).
+_rtld_libsys_objs+=oscraft_libsys.pico
+CLEANFILES+=oscraft_libsys.pico
+.else
 .for _obj in ${_libsys_other_objects}
 _rtld_libsys_objs+=${_obj}.pico
 CLEANFILES+=${_obj}.pico
 # LDFLAGS+=	-Wl,--trace-symbol=${_obj}
 .endfor
+.endif
 # LDFLAGS+=	-Wl,--trace
 
 # We insert all the .o files from libc_nossp_pic.a into a new rtld_libc.a file
