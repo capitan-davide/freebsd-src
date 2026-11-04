@@ -50,3 +50,8 @@ CFLAGS+=	-I${SRCTOP}/lib/libc++
 GENDIRDEPS_FILTER+= Nlib/libc++
 .endif
 .endif
+
+# OsCraft: cross-built with a newer host clang, whose own libc++ headers
+# come before the sysroot's and trip this warning under -Werror.
+CXXFLAGS+=	-Wno-pragma-clang-attribute
+CFLAGS+=	-Wno-pragma-clang-attribute
