@@ -564,6 +564,19 @@ epoch_exit(epoch_t epoch)
  * epoch_block_handler_preempt() is a callback from the CK code when another
  * thread is currently in an epoch section.
  */
+#ifdef OSCRAFT_BSDKERN
+/*
+ * A user process on OsCraft: the kernel schedules, and priorities are
+ * inherited through its mutexes, so there is nothing to lend here.
+ */
+static void
+epoch_block_handler_preempt(struct ck_epoch *global __unused,
+    ck_epoch_record_t *cr, void *arg __unused)
+{
+
+	sched_relinquish(curthread);
+}
+#else
 static void
 epoch_block_handler_preempt(struct ck_epoch *global __unused,
     ck_epoch_record_t *cr, void *arg __unused)
@@ -701,6 +714,7 @@ epoch_block_handler_preempt(struct ck_epoch *global __unused,
 	 */
 	thread_lock(td);
 }
+#endif
 
 void
 epoch_wait_preempt(epoch_t epoch)
