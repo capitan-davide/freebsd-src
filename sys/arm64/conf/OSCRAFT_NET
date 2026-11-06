@@ -9,6 +9,7 @@ cpu		ARM64
 ident		OSCRAFT_NET
 makeoptions	CONF_CFLAGS="-DOSCRAFT_BSDKERN -DMUTEX_NOINLINE -DRWLOCK_NOINLINE -DSX_NOINLINE"
 makeoptions	WITHOUT_MODULES=1
+makeoptions	DEBUG=-g
 
 options 	INET
 options 	SMP
