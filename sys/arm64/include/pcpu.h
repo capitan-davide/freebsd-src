@@ -56,6 +56,29 @@ struct debug_monitor_state;
 
 struct pcpu;
 
+#ifdef OSCRAFT_BSDKERN
+/*
+ * In a user process on OsCraft (bsdkern) x18 is an ordinary register and a
+ * thread is not tied to a CPU: both pointers are per thread. The pcpu is
+ * the slot critical_enter() took, so only use it inside a critical section.
+ */
+extern __thread struct thread *bsdkern_curthread;
+extern __thread struct pcpu *bsdkern_curpcpu;
+
+static inline struct pcpu *
+get_pcpu(void)
+{
+
+	return (bsdkern_curpcpu);
+}
+
+static inline struct thread *
+get_curthread(void)
+{
+
+	return (bsdkern_curthread);
+}
+#else
 static inline struct pcpu *
 get_pcpu(void)
 {
@@ -73,6 +96,7 @@ get_curthread(void)
 	__asm __volatile("ldr	%0, [x18]" : "=&r"(td));
 	return (td);
 }
+#endif
 
 #define	curthread get_curthread()
 

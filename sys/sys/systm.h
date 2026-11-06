@@ -206,6 +206,14 @@ critical_exit(void)
 }
 #endif
 
+#ifdef OSCRAFT_BSDKERN
+/* A user process cannot stop preemption: bsdkern takes a per-CPU slot. */
+#undef critical_enter
+#undef critical_exit
+#define critical_enter() critical_enter_KBI()
+#define critical_exit() critical_exit_KBI()
+#endif
+
 #ifdef  EARLY_PRINTF
 typedef void early_putc_t(int ch);
 extern early_putc_t *early_putc;
